@@ -39,6 +39,10 @@ jobs:
           SSH_KEY: ${{ secrets.OCPP_NEW_PEM }}
           EC2_INSTANCE_IP:  ${{ secrets.EC2_INSTANCE_IP}}
           USERNAME: ec2-user
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}        
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID}}
 
 
       uses: appleboy/ssh-action@master
