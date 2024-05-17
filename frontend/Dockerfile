@@ -50,7 +50,7 @@ FROM base as final
 
 # Use production node environment by default.
 ENV NODE_ENV production 
-ENV NEXT_PUBLIC_BASE_URL https://panel.goecworld.com:90/api/v1
+ENV NEXT_PUBLIC_BASE_URL https://panel.goecworld.com/api/v1
 
 # Run the application as a non-root user.
 USER node
