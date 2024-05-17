@@ -93,7 +93,7 @@ function exitHandler(options, exitCode) {
   if (options.exit) process.exit();
 }
 
-// do something when app is closing
+// do something when app is closingzd
 process.on('exit', exitHandler.bind(null, { cleanup: true }));
 
 // Catches ctrl+c eventscd
