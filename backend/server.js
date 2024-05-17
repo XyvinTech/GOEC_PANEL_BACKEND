@@ -99,7 +99,7 @@ process.on('exit', exitHandler.bind(null, { cleanup: true }));
 // Catches ctrl+c event
 process.on('SIGINT', exitHandler.bind(null, { exit: true }));
 
-// Handle unhandled promise rejections
+// Handle unhandled promise rejections.
 process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`);
 });
