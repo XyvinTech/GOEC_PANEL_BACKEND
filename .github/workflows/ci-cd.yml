@@ -15,6 +15,7 @@ jobs:
         AWS_REGION: ${{ secrets.AWS_REGION }}        
         AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID}}
 
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -50,12 +51,21 @@ jobs:
             # Refresh ECR login
             aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
             
+            # Ensure Docker Compose is installed
+            if ! type "docker-compose" &gt; /dev/null; then
+              sudo curl -L "https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+            fi
+
+            # Sync Docker Compose file from repo
+            sudo rm -f ./docker-compose.yml
+            scp -i ${{ env.SSH_KEY }} docker-compose.yml ${{ env.USERNAME }}@${{ env.EC2_INSTANCE_IP }}:~/docker-compose.yml
+
             # Use Docker Compose to pull, stop, remove, and rerun containers
-            sudo docker-compose pull
-            sudo docker-compose down
-            sudo docker-compose up -d
-            
+            cd ~
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
+
             # Clean up old Docker images
-            sudo docker system prune -af    
-            # Clean up old Docker images
-            sudo docker system prune -af
+            docker system prune -af
