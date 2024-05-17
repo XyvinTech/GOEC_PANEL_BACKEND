@@ -2,8 +2,7 @@ import Cookies from 'js-cookie';
 import { Station, getAllStations } from './stationSlice';
 import { toast } from 'react-toastify';
 
-// const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-const baseUrl = 'https://panel.goecworld.com/api/v1';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 export const fetchStations = async (data = {  state: '',
