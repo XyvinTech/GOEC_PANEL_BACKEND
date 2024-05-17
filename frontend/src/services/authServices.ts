@@ -10,7 +10,8 @@ const login = async (
   password: string
 ): Promise<LoginResponse> => {
   try {
-    const baseUrl = 'https://panel.goecworld.com:90/api/v1';
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = 'https://panel.goecworld.com/api/v1';
     console.log('Base URL:', process.env.NEXT_PUBLIC_BASE_URL);
     const response = await fetch(`${baseUrl}/auth/login`, {
       method: 'POST',
