@@ -11,7 +11,7 @@ const login = async (
 ): Promise<LoginResponse> => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-
+    console.log('Base URL:', process.env.NEXT_PUBLIC_BASE_URL);
     const response = await fetch(`${baseUrl}/auth/login`, {
       method: 'POST',
       headers: {
