@@ -55,7 +55,7 @@ const customOptions = {
   },
 };
 
-// DB connections
+// DB connection
 connectDB();
 
 // Express Initialization
