@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/goec-panel-frontend:latest
+    ports:
+      - "3000:3000"
+  
+  backend:
+    build:
+      context: ./backend
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/goec-panel-backend:latest
+    ports:
+      - "8000:8000"

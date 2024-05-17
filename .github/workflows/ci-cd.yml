@@ -1,0 +1,61 @@
+name: Build , Push and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}        
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID}}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+        
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build and Push Docker images using Docker Compose
+      run: |
+        docker-compose build
+        docker-compose push
+
+
+    - name: Deploy to EC2
+      env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          SSH_KEY: ${{ secrets.OCPP_NEW_PEM }}
+          EC2_INSTANCE_IP:  ${{ secrets.EC2_INSTANCE_IP}}
+          USERNAME: ec2-user
+
+
+      uses: appleboy/ssh-action@master
+      with:
+          host: ${{ env.EC2_INSTANCE_IP }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.SSH_KEY}}
+          script: |
+
+            # Refresh ECR login
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+            
+            # Use Docker Compose to pull, stop, remove, and rerun containers
+            sudo docker-compose pull
+            sudo docker-compose down
+            sudo docker-compose up -d
+            
+            # Clean up old Docker images
+            sudo docker system prune -af    
+            # Clean up old Docker images
+            sudo docker system prune -af
