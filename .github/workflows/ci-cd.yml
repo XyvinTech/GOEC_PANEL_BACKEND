@@ -39,10 +39,9 @@ jobs:
           SSH_KEY: ${{ secrets.OCPP_NEW_PEM }}
           EC2_INSTANCE_IP:  ${{ secrets.EC2_INSTANCE_IP}}
           USERNAME: ec2-user
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}        
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID}}
+          IMAGE_TAG: latest
+          FRONTEND_PORT: 3000
+          BACKEND_PORT: 8000
 
 
       uses: appleboy/ssh-action@master
@@ -57,11 +56,25 @@ jobs:
             
 
 
-            # Use Docker Compose to pull, stop, remove, and rerun containers
-            cd ~
-            docker-compose pull
-            docker-compose down
-            docker-compose up -d
+            # Pull and run the Frontend Docker Image
+            sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-frontend:${{ env.IMAGE_TAG }}
+            sudo docker stop frontend-container || true
+            sudo docker rm frontend-container || true
+            sudo docker run -d \
+              -p ${{ env.FRONTEND_PORT }}:${{ env.FRONTEND_PORT }}\
+              --name frontend-container \
+              -e ENVIRONMENT=production \
+              ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-frontend:${{ env.IMAGE_TAG }}
 
+            # Pull and run the Backend Docker Image
+            sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-backend:${{ env.IMAGE_TAG }}
+            sudo docker stop backend-container || true
+            sudo docker rm backend-container || true
+            sudo docker run -d \
+              -p ${{ env.BACKEND_PORT }}:${{ env.BACKEND_PORT }}\
+              --name backend-container \
+              -e ENVIRONMENT=production \
+              ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-backend:${{ env.IMAGE_TAG }}
+                  
             # Clean up old Docker images
-            docker system prune -af
+            sudo docker system prune -af
