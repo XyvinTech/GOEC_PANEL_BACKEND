@@ -24,8 +24,10 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     npm ci --omit=dev
 
 # Run the application as a non-root user.
-RUN mkdir -p uploads && chown node:node uploads
 USER node
+
+COPY --chown=node:node . .
+RUN ["chmod", "755", "your-script.sh"]
 
 # Copy the rest of the source files into the image.
 COPY . .
