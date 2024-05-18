@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server",
+    "start": "nodemon server",
     "dev": "nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,9 +25,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "url-parse": "^1.5.10",
+    "nodemon": "^3.1.0",
     "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
   }
 }

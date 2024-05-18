@@ -1,1 +1,0 @@
-export type CheckboxTypes = "rest_room" | "restaurant" | 'hotel' | "cafe" | "mall"

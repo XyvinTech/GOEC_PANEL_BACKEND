@@ -27,18 +27,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    # Build and push Frontend Docker image
-    - name: Build and Push FrontEnd Docker image
-      env:  
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: goec-panel-frontend
-        IMAGE_TAG: latest
-        SERVICE_NAME: frontend
 
-      run: |    
-        cd ${{env.SERVICE_NAME}}
-        docker build -t ${{env.ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
-        docker push ${{env.ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
     # Build and push Backend Docker image
     - name : Build and Push Backend Docker image
@@ -75,17 +64,6 @@ jobs:
             # Refresh ECR login
             aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
             
-
-
-            # Pull and run the Frontend Docker Image
-            sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-frontend:${{ env.IMAGE_TAG }}
-            sudo docker stop frontend-container || true
-            sudo docker rm frontend-container || true
-            sudo docker run -d \
-              -p ${{ env.FRONTEND_PORT }}:${{ env.FRONTEND_PORT }}\
-              --name frontend-container \
-              -e NEXT_PUBLIC_BASE_URL=https://panel.goecworld.com/api/v1 \
-              ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-frontend:${{ env.IMAGE_TAG }}
 
             # Pull and run the Backend Docker Image
             sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/goec-panel-backend:${{ env.IMAGE_TAG }}
