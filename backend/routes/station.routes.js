@@ -17,14 +17,14 @@ const upload = multer({
 // Multer initialisation for excel
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, './uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
-const excel = multer({ storage });
+const excel = multer({ storage:storage });
 
 stationRouter.route('/add').post(
   protect,
