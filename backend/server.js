@@ -64,7 +64,7 @@ const app = express();
 // Enable CORS for all routes and origins
 app.use(cors());
 
-// Body parser
+// Body parsers
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
