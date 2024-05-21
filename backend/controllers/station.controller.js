@@ -232,6 +232,9 @@ export const UpdateChargingStation = asyncHandler(async (req, res, next) => {
       return;
     }
 
+    console.log('Found charging station', req.files)
+
+
     let imageUrl = chargingStation.images[0];
     let coverImageUrl = chargingStation.coverImage[0];
 
@@ -247,7 +250,7 @@ export const UpdateChargingStation = asyncHandler(async (req, res, next) => {
 
     if (req?.files && req.files['coverImage']) {
       // If a new image is provided in the request, upload it
-      imageUrl = await uploadFile(
+      coverImageUrl = await uploadFile(
         req.files['coverImage'][0],
         'stations',
         getRandomFileName(`${stationName}-cover`)
@@ -256,7 +259,7 @@ export const UpdateChargingStation = asyncHandler(async (req, res, next) => {
     }
     // Map nearby station names to their corresponding IDs
     const nearbyStationIds = JSON.parse(nearbyStations);
-
+console.log()
     // Remove any null values (stations not found) from the array
 
     // Update the charging station with the new data
