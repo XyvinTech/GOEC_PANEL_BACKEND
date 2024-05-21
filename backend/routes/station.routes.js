@@ -34,14 +34,21 @@ stationRouter.route('/add').post(
   ]),
   stationController.AddChargingStation
 );
+
+
 stationRouter
   .route('/getall')
   .get(protect, stationController.GetAllChargingStation);
-stationRouter
 
+
+
+stationRouter
   // Get single station by querying id or get all stations
   .route('/getall-stations')
   .get(protect, stationController.GetAllChargingStationWOFilter);
+
+
+  
 stationRouter
   .route('/delete')
   .delete(protect, stationController.DeleteChargingStations);

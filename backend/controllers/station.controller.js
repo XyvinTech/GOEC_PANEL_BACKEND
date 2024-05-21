@@ -121,8 +121,8 @@ export const GetAllChargingStation = asyncHandler(async (req, res, next) => {
           ...station.toJSON(),
           nearbyStations: station.nearbyStations,
           media: {
-            images: station.images.map((image) => image.public),
-            coverImage: station.coverImage.map((image) => image.public),
+            images: station.images.map((image) => image?.public),
+            coverImage: station.coverImage.map((image) => image?.public),
           },
         };
       })
@@ -154,6 +154,7 @@ export const GetAllChargingStation = asyncHandler(async (req, res, next) => {
 export const GetAllChargingStationWOFilter = asyncHandler(
   async (req, res, next) => {
     let chargingStations;
+    console.log("adsaddsadsa")
     const { id } = req.query;
     try {
       if (id) {
