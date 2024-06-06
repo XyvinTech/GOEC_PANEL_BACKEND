@@ -41,7 +41,9 @@ stationRouter
   .route('/getall')
   .get( stationController.GetAllChargingStation);
 
-
+  stationRouter
+  .route('/getall-map')
+  .get( stationController.GetAllChargingStationForMap);
 
 stationRouter
   // Get single station by querying id or get all stations

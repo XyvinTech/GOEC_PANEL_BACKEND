@@ -151,6 +151,48 @@ export const GetAllChargingStation = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const GetAllChargingStationForMap = asyncHandler(async (req, res, next) => {
+  try {
+    let query = {};
+
+    query['goecOnly'] = req.query.goecOnly ?? false;
+
+    if (req.query.city) {
+      query['location.city'] = { $regex: new RegExp(req.query.city, 'i') };
+    }
+
+    if (req.query.state) {
+      query['location.state'] = { $regex: new RegExp(req.query.state, 'i') };
+    }
+
+    const chargingStations = await ChargingStation.find(query)
+
+    const modifiedChargingStations = await Promise.all(
+      chargingStations.map(async (station) => {
+        return {
+          ...station.toJSON(),
+          nearbyStations: station.nearbyStations,
+          media: {
+            images: station.images.map((image) => image?.public),
+            coverImage: station.coverImage.map((image) => image?.public),
+          },
+        };
+      })
+    );
+
+    res.status(200).send({
+      success: true,
+      data: modifiedChargingStations,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: 'Server error while retrieving charging stations',
+    });
+  }
+});
+
 export const GetAllChargingStationWOFilter = asyncHandler(
   async (req, res, next) => {
     let chargingStations;
