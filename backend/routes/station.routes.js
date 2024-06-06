@@ -35,17 +35,18 @@ stationRouter.route('/add').post(
   stationController.AddChargingStation
 );
 
+//? Add token from frontend
 
 stationRouter
   .route('/getall')
-  .get(protect, stationController.GetAllChargingStation);
+  .get( stationController.GetAllChargingStation);
 
 
 
 stationRouter
   // Get single station by querying id or get all stations
   .route('/getall-stations')
-  .get(protect, stationController.GetAllChargingStationWOFilter);
+  .get( stationController.GetAllChargingStationWOFilter);
 
 
   

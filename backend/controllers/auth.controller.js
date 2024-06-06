@@ -61,7 +61,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 
     // If user is found and password is right, create a token
     const token = user.getSignedJwtToken();
-
+console.log(token);
     // Return the token
     res.status(200).send({
       success: true,
